@@ -1,0 +1,52 @@
+# Prompt used only by Ghostty's Nushell configuration.
+palette = "tokyonight_storm"
+format = "$directory$aws$kubernetes$line_break$character"
+right_format = "$git_branch$git_status$cmd_duration"
+add_newline = true
+command_timeout = 700
+
+[directory]
+style = "bold #bb9af7"
+truncation_length = 2
+truncation_symbol = "…/"
+truncate_to_repo = true
+read_only = " "
+
+[git_branch]
+format = "[$symbol$branch]($style) "
+symbol = " "
+style = "#bb9af7"
+
+[git_status]
+format = '([\[$all_status$ahead_behind\]]($style) )'
+style = "#e0af68"
+
+[aws]
+format = "[AWS:$profile( $region)]($style) "
+style = "#e0af68"
+
+[azure]
+disabled = true
+format = "[AZ:$subscription]($style) "
+style = "#89dceb"
+
+[kubernetes]
+disabled = false
+format = "[k8s:$context( / $namespace)]($style) "
+style = "#7aa2f7"
+
+[cmd_duration]
+min_time = 3000
+format = "[tardó $duration]($style) "
+style = "#565f89"
+
+[character]
+success_symbol = "[❯](bold #9ece6a)"
+error_symbol = "[❯](bold #f7768e)"
+
+[palettes.tokyonight_storm]
+lavender = "#bb9af7"
+green = "#9ece6a"
+red = "#f7768e"
+peach = "#e0af68"
+text = "#c0caf5"

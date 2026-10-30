@@ -1,0 +1,101 @@
+theme = "TokyoNight Storm"
+font-size = 13
+font-family = "JetBrainsMono Nerd Font"
+window-padding-x = 12
+window-padding-y = 12
+macos-titlebar-style = transparent
+window-decoration = true
+confirm-close-surface = false
+background-opacity = 0.85
+background-blur = 20
+
+# Nushell starts directly; tmux is started only by an explicit command.
+command = shell:exec "@BREW@/bin/nu" --config "@HOME@/.config/ghostty/nushell/config.nu"
+
+# Kitty-style shortcuts: send function keys understood by tmux.
+# Bare Nushell ignores these keys instead of receiving a tmux prefix as text.
+keybind = ctrl+shift+tab=ignore
+keybind = ctrl+tab=ignore
+keybind = super+digit_1=ignore
+keybind = super+1=ignore
+keybind = super+digit_2=ignore
+keybind = super+2=ignore
+keybind = super+digit_3=ignore
+keybind = super+3=ignore
+keybind = super+digit_4=ignore
+keybind = super+4=ignore
+keybind = super+digit_5=ignore
+keybind = super+5=ignore
+keybind = super+digit_6=ignore
+keybind = super+6=ignore
+keybind = super+digit_7=ignore
+keybind = super+7=ignore
+keybind = super+digit_8=ignore
+keybind = super+8=ignore
+keybind = super+9=ignore
+keybind = super+shift+enter=ignore
+keybind = super+w=ignore
+keybind = super+alt+w=ignore
+keybind = super+t=ignore
+keybind = super+shift+[=ignore
+keybind = super+shift+]=ignore
+keybind = super+d=ignore
+keybind = super+shift+d=ignore
+keybind = super+[=ignore
+keybind = super+]=ignore
+keybind = super+alt+arrow_up=ignore
+keybind = super+alt+arrow_down=ignore
+keybind = super+alt+arrow_left=ignore
+keybind = super+alt+arrow_right=ignore
+keybind = super+ctrl+arrow_up=ignore
+keybind = super+ctrl+arrow_down=ignore
+keybind = super+ctrl+arrow_left=ignore
+keybind = super+ctrl+arrow_right=ignore
+keybind = super+d=text:\x1b[1;2P
+keybind = super+shift+d=text:\x1b[1;2Q
+keybind = super+w=text:\x1b[1;2R
+keybind = super+enter=text:\x1b[1;2S
+keybind = super+r=text:\x1b[15;2~
+keybind = super+shift+r=text:\x1b[17;2~
+keybind = super+t=text:\x1b[18;2~
+keybind = super+shift+arrow_left=text:\x1b[19;2~
+keybind = super+shift+arrow_right=text:\x1b[20;2~
+keybind = super+alt+arrow_left=text:\x1b[21;2~
+keybind = super+alt+arrow_down=text:\x1b[23;2~
+keybind = super+alt+arrow_up=text:\x1b[24;2~
+keybind = super+alt+arrow_right=text:\x1b[1;5P
+keybind = super+shift+p=text:\x1b[1;5Q
+keybind = super+shift+i=text:\x1b[1;5R
+keybind = super+f=text:\x1b[1;5S
+keybind = super+shift+c=text:\x1b[15;5~
+keybind = super+shift+l=text:\x1b[17;5~
+keybind = super+shift+n=text:\x1b[18;5~
+keybind = super+1=text:\x1b[19;5~
+keybind = super+2=text:\x1b[20;5~
+keybind = super+3=text:\x1b[21;5~
+keybind = super+4=text:\x1b[23;5~
+keybind = super+5=text:\x1b[24;5~
+keybind = super+6=text:\x1b[1;6P
+keybind = super+7=text:\x1b[1;6Q
+keybind = super+8=text:\x1b[1;6R
+keybind = super+9=text:\x1b[1;6S
+keybind = super+shift+[=text:\x1b[19;2~
+keybind = super+shift+]=text:\x1b[20;2~
+keybind = ctrl+shift+tab=text:\x1b[19;2~
+keybind = ctrl+tab=text:\x1b[20;2~
+keybind = super+shift+f=text:\x1b[15;6~
+keybind = super+digit_1=text:\x1b[19;5~
+keybind = super+digit_2=text:\x1b[20;5~
+keybind = super+digit_3=text:\x1b[21;5~
+keybind = super+digit_4=text:\x1b[23;5~
+keybind = super+digit_5=text:\x1b[24;5~
+keybind = super+digit_6=text:\x1b[1;6P
+keybind = super+digit_7=text:\x1b[1;6Q
+keybind = super+digit_8=text:\x1b[1;6R
+keybind = super+digit_9=text:\x1b[1;6S
+keybind = escape=unbind
+keybind = super+shift+o=toggle_command_palette
+
+# Tmux additions: floating terminal and hint-based copy.
+keybind = super+shift+b=text:\x1b[15;6~
+keybind = super+shift+y=text:\x1b[17;6~

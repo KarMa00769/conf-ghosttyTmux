@@ -1,0 +1,25 @@
+#!/bin/sh
+# This server and its sessions belong only to the Ghostty experiment.
+set -eu
+unset TMUX TMUX_PANE
+tmux=@BREW@/bin/tmux
+config="$HOME/.config/ghostty/tmux.conf"
+
+# Separate OS windows get independent sessions; reuse detached work first.
+sessions=$("$tmux" -L ghostty-lab list-sessions -F '#{session_id} #{session_attached}' 2>/dev/null || :)
+resume=''
+while read -r session attached; do
+    if [ -n "$session" ] && [ "$attached" = 0 ]; then
+        resume=$session
+        break
+    fi
+done <<EOF
+$sessions
+EOF
+if [ -n "$resume" ]; then
+    exec "$tmux" -L ghostty-lab -f "$config" attach-session -t "$resume"
+fi
+if [ -z "$sessions" ]; then
+    exec "$tmux" -L ghostty-lab -f "$config" new-session -s principal
+fi
+exec "$tmux" -L ghostty-lab -f "$config" new-session

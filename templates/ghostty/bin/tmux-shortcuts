@@ -1,0 +1,44 @@
+#!/bin/sh
+# Short commands for Ghostty's isolated tmux server.
+set -eu
+operation=${1:-}
+[ "$#" -gt 0 ] && shift
+case "$operation" in
+  start|list) [ "$#" -eq 0 ] || { printf 'Uso: %s\n' "$operation" >&2; exit 2; } ;;
+  new|attach|kill) [ "$#" -eq 1 ] && [ -n "$1" ] || { printf 'Indica exactamente un nombre de sesión.\n' >&2; exit 2; } ;;
+  *) printf 'Comando de tmux desconocido.\n' >&2; exit 2 ;;
+esac
+tmux="@BREW@/bin/tmux"
+config="@HOME@/.config/ghostty/tmux.conf"
+inside=0
+case "${TMUX:-}" in
+  */ghostty-lab,*) inside=1 ;;
+  '') ;;
+  *) if [ "$operation" = new ] || [ "$operation" = attach ]; then
+       printf 'Ya estás en otro servidor tmux; sal de él antes de cambiar a Ghostty.\n' >&2
+       exit 1
+     fi ;;
+esac
+case "$operation" in
+  start)
+    if [ -n "${TMUX:-}" ]; then
+      printf 'Ya estás dentro de tmux. Usa Ctrl+B y después d para desconectarte.\n'
+    else
+      exec "@HOME@/.config/ghostty/start-tmux"
+    fi ;;
+  list) exec "$tmux" -L ghostty-lab -f "$config" list-sessions ;;
+  new)
+    if [ "$inside" -eq 1 ]; then
+      "$tmux" -L ghostty-lab -f "$config" new-session -d -s "$1" -c "$PWD"
+      exec "$tmux" -L ghostty-lab -f "$config" switch-client -t "=$1"
+    else
+      exec "$tmux" -L ghostty-lab -f "$config" new-session -s "$1" -c "$PWD"
+    fi ;;
+  attach)
+    if [ "$inside" -eq 1 ]; then
+      exec "$tmux" -L ghostty-lab -f "$config" switch-client -t "=$1"
+    else
+      exec "$tmux" -L ghostty-lab -f "$config" attach-session -t "=$1"
+    fi ;;
+  kill) exec "$tmux" -L ghostty-lab -f "$config" kill-session -t "=$1" ;;
+esac
