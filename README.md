@@ -1,6 +1,6 @@
 # Ghostty + tmux · Tokyo Night
 
-Una configuración personal para macOS: Ghostty, tmux y Nushell con colores Tokyo Night Storm, paneles con WASD y comandos cortos para sesiones. Ghostty abre Nushell; tmux se inicia manualmente.
+Una configuración personal para macOS: Ghostty, tmux y zsh con colores Tokyo Night Storm, paneles con WASD y comandos cortos para sesiones. Ghostty abre zsh; tmux se inicia manualmente. Nushell sigue disponible con `nu`.
 
 > Estado: primera versión para macOS. Probada en Apple Silicon con Ghostty 1.4, tmux 3.7 y Nushell 0.115. Intel usa el prefijo de Homebrew detectado, pero aún no se ha probado en una Mac Intel. Linux queda para una versión posterior.
 
@@ -11,12 +11,12 @@ Necesitas [Homebrew](https://brew.sh/) y Python 3. En macOS, Python también se 
 ```sh
 git clone https://github.com/KarMa00769/conf-ghosttyTmux.git
 cd conf-ghosttyTmux
-./install.sh --install-deps --with-zsh
+./install.sh --install-deps
 ```
 
 `--install-deps` pide a Homebrew instalar Ghostty, JetBrainsMono Nerd Font, tmux, Nushell, Starship, Zoxide, fzf, Carapace y Rust. Rust compila tmux-thumbs para la arquitectura de la Mac. Los plugins de tmux se incluyen como código fuente en este repo.
 
-Si ya tienes las dependencias, ejecuta `./install.sh --with-zsh`. Para omitir tmux-thumbs y no necesitar Rust, usa `./install.sh --without-thumbs --with-zsh`; sus atajos no estarán disponibles. `--with-zsh` es opcional: añade un bloque identificable a `~/.zshrc` para habilitar los comandos cortos en zsh de Ghostty. Las demás shells de zsh no se modifican.
+Si ya tienes las dependencias, ejecuta `./install.sh`. Para omitir tmux-thumbs y no necesitar Rust, usa `./install.sh --without-thumbs`; sus atajos no estarán disponibles. El instalador añade un bloque identificable a `~/.zshrc` para habilitar las integraciones en zsh de Ghostty. Las demás shells de zsh no se modifican.
 
 El instalador escribe archivos gestionados en `~/.config/ghostty` y guarda cualquier versión anterior en `~/.local/state/conf-ghosttyTmux/`. Si existe el archivo global de configuración de Nushell en la ubicación estándar de macOS, la configuración de Ghostty lo carga primero. Los datos de sesiones, historiales y archivos de usuario permanecen en la máquina. Se admiten espacios en `HOME`; por seguridad, el instalador rechaza comillas, `$`, acentos graves, barras invertidas y saltos de línea en esa ruta.
 
@@ -24,7 +24,7 @@ Abre Ghostty y ejecuta `t` o `tmux` para entrar a tmux. Para cargar cambios de c
 
 ## Comandos
 
-Disponibles en Nushell de Ghostty y, con `--with-zsh`, en zsh de Ghostty:
+Disponibles en zsh y Nushell de Ghostty:
 
 | Comando | Acción |
 | --- | --- |
@@ -37,7 +37,7 @@ Disponibles en Nushell de Ghostty y, con `--with-zsh`, en zsh de Ghostty:
 | `kctx` | Muestra el contexto actual de Kubernetes. |
 | `kpods` | Lista pods; acepta opciones, por ejemplo `kpods -A`. |
 
-`kctx` y `kpods` requieren `kubectl` y una configuración de Kubernetes; el instalador no los instala ni cambia contextos. Nushell también tiene `gst`, `gd`, `gl`, `k`, `kg`, `kd`, `kl`, `ll`, `la`, `z` y `zi`.
+`kctx` y `kpods` requieren `kubectl` y una configuración de Kubernetes; el instalador no los instala ni cambia contextos. Ambas shells incluyen `gst`, `gd`, `gl`, `k`, `kg`, `kd`, `kl`, `z` y `zi`; `ll` y `la` dependen de la configuración de cada shell.
 
 ## Atajos dentro de tmux
 
@@ -78,4 +78,4 @@ Las fuentes de tmux-sessionx, tmux-floax, tmux-resurrect y tmux-thumbs se distri
 
 ## English
 
-A macOS Ghostty/tmux/Nushell setup with Tokyo Night styling and Kitty-inspired shortcuts. Install with `./install.sh --install-deps --with-zsh`; add `--without-thumbs` to skip Rust and tmux-thumbs. The installer backs up replaced files. Run `./install.sh --uninstall` to undo the most recent installation. Apple Silicon has been tested; Intel and Linux remain unverified.
+A macOS Ghostty/tmux/zsh setup with Tokyo Night styling and Kitty-inspired shortcuts. Install with `./install.sh --install-deps`; add `--without-thumbs` to skip Rust and tmux-thumbs. The installer backs up replaced files. Run `./install.sh --uninstall` to undo the most recent installation. Apple Silicon has been tested; Intel and Linux remain unverified.

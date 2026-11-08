@@ -81,7 +81,7 @@ def uninstall():
 def main():
     parser = argparse.ArgumentParser(description='Instalador de Ghostty + tmux para macOS')
     parser.add_argument('--install-deps', action='store_true', help='Instala dependencias con Homebrew')
-    parser.add_argument('--with-zsh', action='store_true', help='Activa los comandos cortos también en zsh de Ghostty')
+    parser.add_argument('--with-zsh', action='store_true', help='Opción conservada por compatibilidad; zsh se configura por defecto')
     parser.add_argument('--without-thumbs', action='store_true', help='Omite tmux-thumbs y Rust')
     parser.add_argument('--uninstall', action='store_true', help='Deshace la última instalación y restaura sus respaldos')
     args = parser.parse_args()
@@ -155,16 +155,15 @@ def main():
                 dest.parent.mkdir(parents=True, exist_ok=True)
                 if source.is_dir(): shutil.copytree(source,dest,symlinks=True)
                 else: shutil.copy2(source,dest)
-            if args.with_zsh:
-                zshrc = HOME/'.zshrc'
-                content = zshrc.read_text() if zshrc.exists() else ''
-                if MARK_START not in content:
-                    if zshrc.exists():
-                        shutil.copy2(zshrc, backup/'zshrc.original')
-                    block = '\n'+MARK_START+'\n[[ -r "$HOME/.config/ghostty/zsh/vi-mode.zsh" ]] && source "$HOME/.config/ghostty/zsh/vi-mode.zsh"\n'+MARK_END+'\n'
-                    zshrc.write_text(content+block)
-                    manifest['zsh_added']=True
-                    manifest['zsh_block']=block
+            zshrc = HOME/'.zshrc'
+            content = zshrc.read_text() if zshrc.exists() else ''
+            if MARK_START not in content:
+                if zshrc.exists():
+                    shutil.copy2(zshrc, backup/'zshrc.original')
+                block = '\n'+MARK_START+'\n[[ -r "$HOME/.config/ghostty/zsh/vi-mode.zsh" ]] && source "$HOME/.config/ghostty/zsh/vi-mode.zsh"\n'+MARK_END+'\n'
+                zshrc.write_text(content+block)
+                manifest['zsh_added']=True
+                manifest['zsh_block']=block
             manifest_path.write_text(json.dumps(manifest,indent=2)+'\n')
         except BaseException:
             if manifest.get('zsh_added'):
@@ -181,7 +180,6 @@ def main():
             raise
     print('Instalación completa. Respaldo:', backup)
     print('Abre Ghostty y ejecuta t o tmux para entrar a tmux.')
-    if not args.with_zsh: print('Para habilitar los comandos en zsh de Ghostty, reinstala con --with-zsh.')
     print('Recarga Ghostty con Cmd+Shift+, o reinícialo.')
 
 if __name__ == '__main__':

@@ -16,7 +16,7 @@ missing = [k for k, v in programs.items() if not v]
 if missing:
     raise SystemExit('Faltan dependencias en PATH: ' + ', '.join(missing))
 
-with tempfile.TemporaryDirectory(prefix='ghostty-smoke-') as temp:
+with tempfile.TemporaryDirectory(prefix='gs-', dir='/tmp') as temp:
     root = Path(temp)
     home = root / 'home with spaces'
     home.mkdir()
@@ -35,7 +35,7 @@ with tempfile.TemporaryDirectory(prefix='ghostty-smoke-') as temp:
     global_nu.parent.mkdir(parents=True)
     global_nu.write_text("$env.SMOKE_GLOBAL = 'loaded'\n")
     env = os.environ.copy()
-    env.update(HOME=str(home), PATH=str(prefix/'bin')+':/usr/bin:/bin:/usr/sbin:/sbin', TERM='xterm-256color')
+    env.update(TMUX_TMPDIR=str(root), HOME=str(home), PATH=str(prefix/'bin')+':/usr/bin:/bin:/usr/sbin:/sbin', TERM='xterm-256color')
     env.pop('TMUX', None)
     env.pop('TMUX_PANE', None)
     def invoke(*args):
@@ -44,15 +44,15 @@ with tempfile.TemporaryDirectory(prefix='ghostty-smoke-') as temp:
             raise RuntimeError(f'{args}: {result.stderr}\n{result.stdout}')
         return result.stdout
     installer = str(PROJECT/'install.sh')
-    invoke(installer, '--with-zsh', '--without-thumbs')
-    invoke(installer, '--with-zsh', '--without-thumbs')
+    invoke(installer, '--without-thumbs')
+    invoke(installer, '--without-thumbs')
     with (home/'.zshrc').open('a') as f:
         f.write('# edit after installation\n')
     config = dest/'nushell/config.nu'
     assert invoke(programs['nu'], '--config', str(config), '--commands', 'print $env.SMOKE_GLOBAL').strip() == 'loaded'
     command = next(line.split('=', 1)[1].strip() for line in (dest/'config').read_text().splitlines() if line.startswith('command ='))
-    assert command.startswith('shell:exec ')
-    assert invoke('/bin/sh', '-c', command[len('shell:'):] + ' --commands \"print start-ok\"').strip() == 'start-ok'
+    assert command == '/bin/zsh -l'
+    assert invoke('/bin/zsh', '-lc', 'print start-ok').strip() == 'start-ok'
     assert 'tmux-thumbs' not in (dest/'tmux.conf').read_text()
     ghostty = Path('/Applications/Ghostty.app/Contents/MacOS/ghostty')
     if ghostty.exists():
@@ -65,7 +65,11 @@ with tempfile.TemporaryDirectory(prefix='ghostty-smoke-') as temp:
         time.sleep(.5)
         assert 'audit:' in invoke(programs['nu'], '--config', str(config), '--commands', 'tl')
         status = invoke(programs['tmux'], '-L', socket, 'list-panes', '-F', '#{pane_current_command}:#{pane_dead}')
-        assert status.strip() == 'nu:0', status
+        assert status.strip() == 'zsh:0', status
+        zenv = env.copy()
+        zenv['TERM_PROGRAM'] = 'ghostty'
+        check = subprocess.run(['/bin/zsh', '-ic', 'typeset -f t tn tl ta tk tmux nu z zi >/dev/null && alias ports kctx kpods gst gd gl k kg kd kl >/dev/null && print ready'], env=zenv, text=True, capture_output=True)
+        assert check.returncode == 0 and 'ready' in check.stdout, (check.stdout, check.stderr)
         keys = invoke(programs['tmux'], '-L', socket, 'list-keys', '-T', 'prefix')
         assert '/scripts/scripts/floax.sh' not in keys
         assert '/scripts/floax.sh' in keys and '/scripts/menu.sh' in keys
@@ -76,4 +80,4 @@ with tempfile.TemporaryDirectory(prefix='ghostty-smoke-') as temp:
     invoke(installer, '--uninstall')
     assert (dest/'config').read_text() == 'original config\n'
     assert (home/'.zshrc').read_text() == '# original\n# edit after installation\n'
-    print('OK: instalación, reinstalación, Nu, tmux y restauración con HOME temporal.')
+    print('OK: instalación, zsh, Nushell, tmux y restauración con HOME temporal.')

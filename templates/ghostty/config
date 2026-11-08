@@ -9,11 +9,11 @@ confirm-close-surface = false
 background-opacity = 0.85
 background-blur = 20
 
-# Nushell starts directly; tmux is started only by an explicit command.
-command = shell:exec "@BREW@/bin/nu" --config "@HOME@/.config/ghostty/nushell/config.nu"
+# Zsh starts directly; tmux is started only by an explicit command.
+command = /bin/zsh -l
 
 # Kitty-style shortcuts: send function keys understood by tmux.
-# Bare Nushell ignores these keys instead of receiving a tmux prefix as text.
+# Bare zsh ignores these keys instead of receiving a tmux prefix as text.
 keybind = ctrl+shift+tab=ignore
 keybind = ctrl+tab=ignore
 keybind = super+digit_1=ignore
